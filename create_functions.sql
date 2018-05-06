@@ -74,3 +74,22 @@ begin
 
     return sportsman_id;
 end$$
+
+#--------------------------------------------------------------------------
+
+delimiter ;
+drop function if exists get_competition_id;
+
+delimiter $$
+
+create function get_competition_id (c_name varchar(20))
+returns int
+begin
+	declare c_id int default -1;
+    
+	select id into c_id
+	from competition as c
+	where c.name = c_name;
+
+    return c_id;
+end$$

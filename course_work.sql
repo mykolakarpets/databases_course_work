@@ -209,6 +209,7 @@ CREATE TABLE `attenders` (
 
 LOCK TABLES `attenders` WRITE;
 /*!40000 ALTER TABLE `attenders` DISABLE KEYS */;
+INSERT INTO `attenders` VALUES (1,1,1,1),(1,2,1,2),(1,3,1,3),(1,4,0,4),(2,1,0,4),(2,2,1,2),(2,3,0,5),(2,4,0,6),(2,5,1,1),(2,6,1,3),(3,6,1,1),(3,7,1,2),(3,8,1,3),(3,9,0,4),(3,10,0,5);
 /*!40000 ALTER TABLE `attenders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -471,6 +472,83 @@ UNLOCK TABLES;
 --
 -- Dumping routines for database 'course_work'
 --
+/*!50003 DROP FUNCTION IF EXISTS `get_coach_id` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` FUNCTION `get_coach_id`(coach_name varchar(20),
+	coach_surname varchar(20)) RETURNS int(11)
+begin
+	declare coach_id int default -1;
+    
+	select c.id into coach_id
+	from coach as c
+	where c.name = coach_name and c.surname = coach_surname;
+
+    return coach_id;
+end ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP FUNCTION IF EXISTS `get_sportsman_id` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` FUNCTION `get_sportsman_id`(s_name varchar(20),
+	s_surname varchar(20)) RETURNS int(11)
+begin
+	declare sportsman_id int default -1;
+    
+	select id into sportsman_id
+	from sportsman as s
+	where s.name = s_name and s.surname = s_surname;
+
+    return sportsman_id;
+end ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP FUNCTION IF EXISTS `get_sport_id` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` FUNCTION `get_sport_id`(sport_name varchar(20)) RETURNS int(11)
+begin
+	declare sport_id int default -1;
+    
+	select id into sport_id
+	from kind_of_sport as kos
+	where kos.name = sport_name;
+
+    return sport_id;
+end ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP FUNCTION IF EXISTS `get_type_id` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -483,13 +561,103 @@ UNLOCK TABLES;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` FUNCTION `get_type_id`(type_name varchar(20)) RETURNS int(11)
 begin
-	declare type_id int default 0;
+	declare type_id int default -1;
     
 	select id into type_id
     from facility_type as ft
     where ft.name = type_name;
     
     return type_id;
+end ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `get_coaches` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_coaches`(in s_name varchar(20),
+	in s_surname varchar(20))
+begin
+	select s.name as 'Sportsman name',
+				s.surname as 'Sportsman surname',
+                c.name as 'Coach name',
+                c.surname as 'Coach surname'
+	from coach as c
+    join _sportsman_sport_coach as _ssc on _ssc.coach_id = c.id
+    join _sportsman_sport as _ss on _ss.id = _ssc._sportsman_sport_id
+    join sportsman as s on s.id = _ss.sportsman_id
+    where _ss.sportsman_id = get_sportsman_id(s_name, s_surname);	
+end ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `get_competitions_by_date` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_competitions_by_date`(in low_date date, in top_date date,
+	in org_name varchar(20))
+begin
+	select c.name as 'Title',
+				c.date as 'Date',
+                o.name as 'Ogranizer'
+	from competition as c
+    join organizer as o on o.id = c.organizer_id
+    where (c.date > low_date) and (c.date < top_date)
+    and (org_name = "" or o.name = org_name);
+end ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `get_facilities_by_int_param` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_facilities_by_int_param`(IN type_name varchar(20),
+			IN attr_name varchar(20),
+            IN low_bound int,
+            IN top_bound int)
+begin
+	select f.name as 'Facility name',
+				attr.name as 'Attribute name',
+                _af.int_value as 'Value'
+	from facility as f
+	join _attribute_facility as _af
+	join attribute as attr
+	join _attribute_facility_type as _aft on _aft.attribute_id = _af.attribute_id
+		and f.id = _af.facility_id
+		and f.facility_type_id = _aft.facility_type_id
+		and attr.id = _af.attribute_id
+	where attr.name = attr_name 
+			and f.facility_type_id = get_type_id(type_name)
+            and attr.value_type = "int"
+			and _af.int_value >= low_bound
+            and _af.int_value <= top_bound;
 end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -510,22 +678,162 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `get_facilities_by_str_param`(IN typ
 			IN attr_name varchar(20),
             IN attr_value varchar(20))
 begin
-
-select *
-from facility as f
-where f.facility_type_id = get_type_id(type_name);
-
-select *
-from facility as f
-join _attribute_facility as _af
-join attribute as attr
-join _attribute_facility_type as _aft on _aft.attribute_id = _af.attribute_id
-													and f.id = _af.facility_id
-													and f.facility_type_id = _aft.facility_type_id
-                                                    and attr.id = _af.attribute_id
-where attr.name = attr_name 
-		and f.facility_type_id = get_type_id(type_name)
-        and _af.string_value = attr_value;
+	select f.name as 'Facility name',
+				attr.name as 'Attribute name',
+                _af.string_value as 'Value'
+	from facility as f
+	join _attribute_facility as _af
+	join attribute as attr
+	join _attribute_facility_type as _aft on _aft.attribute_id = _af.attribute_id
+		and f.id = _af.facility_id
+		and f.facility_type_id = _aft.facility_type_id
+		and attr.id = _af.attribute_id
+	where attr.name = attr_name 
+			and f.facility_type_id = get_type_id(type_name)
+            and attr.value_type = "string"
+			and _af.string_value = attr_value;
+end ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `get_facilities_by_type` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_facilities_by_type`(IN type_name varchar(20))
+begin
+	select f.id as 'ID',
+				f.name as 'Facility name',
+                ft.name as 'Type name',
+                a.name as 'Attribute name',
+                _af.int_value as 'Integer value',
+                _af.string_value as 'String value'                
+	from facility as f
+    join facility_type as ft 			on f.facility_type_id = ft.id
+    join _attribute_facility as _af 	on f.id = _af.facility_id
+    join attribute as a 						on a.id = _af.attribute_id
+	where f.facility_type_id = get_type_id(type_name) group by f.id;
+end ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `get_sportsmans_by_coach` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_sportsmans_by_coach`(IN coach_name varchar(20),
+	IN coach_surname varchar(20), IN category int)
+begin
+	select s.name as 'Name',
+				s.surname as 'Surname',
+                s.category as 'Category',
+                c.name as 'Coach name',
+                c.surname as 'Coach surname'
+                
+    from sportsman as s
+    join _sportsman_sport as _ss on _ss.sportsman_id = s.id
+    join _sportsman_sport_coach as _ssc on _ssc._sportsman_sport_id = _ss.id
+    join coach as c on c.id = _ssc.coach_id
+		where _ssc.coach_id = get_coach_id(coach_name, coach_surname)
+			and (category = -1 or s.category <= category);
+end ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `get_sportsmans_by_sport` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_sportsmans_by_sport`(IN sport_name varchar(20),
+	IN category int)
+begin
+	select s.name as 'Name',
+				s.surname as 'Surname',
+                kos.name as 'Kind of sport',
+                s.category as 'Category'
+    from sportsman as s
+    join _sportsman_sport as _ss on _ss.sportsman_id = s.id
+    join kind_of_sport as kos on kos.id = _ss.kind_of_sport_id
+		where _ss.kind_of_sport_id = get_sport_id(sport_name)
+			and (category = -1 or s.category <= category);
+end ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `get_sportsmans_by_sport_category` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_sportsmans_by_sport_category`(IN sport_name varchar(20),
+	IN category int)
+begin
+	select s.name as 'Name',
+				s.surname as 'Surname',
+                kos.name as 'Kind of sport',
+                s.category as 'Category'
+    from sportsman as s
+    join _sportsman_sport as _ss on _ss.sportsman_id = s.id
+    join kind_of_sport as kos on kos.id = _ss.kind_of_sport_id
+		where _ss.kind_of_sport_id = get_sport_id(sport_name)
+        and s.category <= category;
+end ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `get_sportsmans_several_kos` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_sportsmans_several_kos`()
+begin    
+	select s.name as 'Name',
+				s.surname as 'Surname',
+               count(_ss.sportsman_id) as 'Sports count'
+    from sportsman as s
+    join _sportsman_sport as _ss on _ss.sportsman_id = s.id 
+	 group by s.id
+     having count(_ss.sportsman_id) > 1;
+	
 end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -542,4 +850,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-05-05 16:33:04
+-- Dump completed on 2018-05-06 14:33:03
