@@ -93,3 +93,22 @@ begin
 
     return c_id;
 end$$
+
+#--------------------------------------------------------------------------
+
+delimiter ;
+drop function if exists get_facility_id;
+
+delimiter $$
+
+create function get_facility_id (f_name varchar(20))
+returns int
+begin
+	declare f_id int default -1;
+    
+	select f.id into f_id
+	from facility as f
+	where f.name = f_name;
+
+    return f_id;
+end$$

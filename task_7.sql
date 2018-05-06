@@ -17,7 +17,6 @@ begin
     join competition as c on c.id = a.competition_id
     where a.competition_id = get_competition_id(c_name) and a.is_medalist = 1
     order by a.result;
-    
 end$$
 
 #--------------------------------------------------------------------------
