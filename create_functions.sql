@@ -54,3 +54,23 @@ begin
 
     return coach_id;
 end$$
+
+#--------------------------------------------------------------------------
+
+delimiter ;
+drop function if exists get_sportsman_id;
+
+delimiter $$
+
+create function get_sportsman_id (s_name varchar(20),
+	s_surname varchar(20))
+returns int
+begin
+	declare sportsman_id int default -1;
+    
+	select id into sportsman_id
+	from sportsman as s
+	where s.name = s_name and s.surname = s_surname;
+
+    return sportsman_id;
+end$$
