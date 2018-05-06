@@ -3,8 +3,6 @@
 drop procedure if exists get_medalists;
 
 delimiter $$
-#org_name - "" if filtering by organizer is not needed
-#						"<organizer name>" otherwise
 create procedure get_medalists(in c_name varchar(20))
 begin
 	select s.name as 'Name',

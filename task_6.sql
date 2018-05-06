@@ -13,7 +13,7 @@ begin
                 o.name as 'Ogranizer'
 	from competition as c
     join organizer as o on o.id = c.organizer_id
-    where (c.date > low_date) and (c.date < top_date)
+    where (c.date >= low_date) and (c.date <= top_date)
     and (org_name = "" or o.name = org_name);
 end$$
 
