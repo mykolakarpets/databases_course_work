@@ -19,12 +19,7 @@ begin
 						and (top_date is null or c.date <= top_date))
 				) as c1
         	on c1.id = att.competition_id
-	
     group by sc.id;
-
-    
-    
-    
 end$$
 
 #--------------------------------------------------------------------------
