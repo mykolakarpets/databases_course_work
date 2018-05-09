@@ -232,3 +232,20 @@ begin
 end$$
 
 #call add_organizer("organizer_1");
+
+#--------------------------------------------------------------------------
+
+delimiter ;
+drop procedure if exists add_sport_club;
+
+delimiter $$
+create procedure add_sport_club(in sc_name varchar(30))
+begin
+	if get_sport_club_id(sc_name) = -1 then
+		insert into sport_club (name) values (sc_name);
+    else
+		select "Specified sport club is already exists!";
+    end if;
+end$$
+
+#call add_sport_club("sport_club_16");

@@ -213,3 +213,22 @@ begin
 
     return kos_id;
 end$$
+
+#--------------------------------------------------------------------------
+
+delimiter ;
+drop function if exists get_sport_club_id;
+
+delimiter $$
+
+create function get_sport_club_id (sc_name varchar(20))
+returns int
+begin
+	declare sc_id int default -1;
+    
+	select sc.id into sc_id
+	from sport_club as sc
+	where sc.name = sc_name;
+
+    return sc_id;
+end$$
