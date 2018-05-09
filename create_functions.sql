@@ -62,8 +62,8 @@ drop function if exists get_sportsman_id;
 
 delimiter $$
 
-create function get_sportsman_id (s_name varchar(20),
-	s_surname varchar(20))
+create function get_sportsman_id (s_name varchar(30),
+	s_surname varchar(30))
 returns int
 begin
 	declare sportsman_id int default -1;

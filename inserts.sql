@@ -249,3 +249,28 @@ begin
 end$$
 
 #call add_sport_club("sport_club_16");
+
+#--------------------------------------------------------------------------
+
+delimiter ;
+drop procedure if exists add_sportsman;
+
+delimiter $$
+create procedure add_sportsman(in s_name varchar(30),
+	in s_surname varchar(30), in in_age int, in in_category int,
+    in sport_club_name varchar(30))
+begin
+	set @sc_id = get_sport_club_id(sport_club_name);
+	if get_sportsman_id(s_name, s_surname) = -1 then
+		if @sc_id != -1 then
+			insert into sportsman (name, surname, age, category, sport_club_id) values
+				(s_name, s_surname, in_age, in_category, @sc_id);
+        else
+			select "Specified sport club not found!";
+        end if;
+    else
+		select "Specified sportsman is already exists";
+    end if;
+end$$
+
+call add_sportsman("sportsman_name_100", "sportsman_surname_100",20, 3, "sport_club_1");
