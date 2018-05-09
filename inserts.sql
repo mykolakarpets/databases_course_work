@@ -152,3 +152,49 @@ begin
 end$$
 
 #call add_attender("sportsman_name_10","sportsman_surname_10", "competition_10", 1, 1);
+
+#--------------------------------------------------------------------------
+
+delimiter ;
+drop procedure if exists add_coach;
+
+delimiter $$
+create procedure add_coach(in c_name varchar(20),
+	in c_surname varchar(20))
+begin
+	if get_coach_id(c_name, c_surname) = -1 then
+		insert into coach (name, surname) values (c_name, c_surname);
+    else
+		select "The coach exists!";
+    end if;
+end$$
+
+#call add_coach("coach_name_16","coach_surname_16#");
+
+#--------------------------------------------------------------------------
+
+delimiter ;
+drop procedure if exists add_competition;
+
+delimiter $$
+create procedure add_competition(in c_name varchar(20),
+	in c_org varchar(20), in c_kos varchar(20), in c_facility varchar(20),
+    in c_date date)
+begin
+	set @org_id = get_org_id(c_org);
+    set @kos_id = get_kos_id(c_kos);
+    set @fac_id = get_facility_id(c_facility);
+	if get_competition_id(c_name) = -1 then
+		if @org_id = 1 and @kos_id = 1 and
+			 @fac_id = 1 then
+			insert into competition (organizer_id, kind_of_sport_id, facility_id, name, date) values
+				(@org_id, @kos_id, @fac_id, c_name, c_date);
+        else
+			select "Organizator, kind of sport or facility are not exist";
+        end if;
+    else
+		select "The competition exists!";
+    end if;
+end$$
+
+#call add_competition("new_competition","oganizer_1","kind_of_sport_1","facility_1","2010-01-01");

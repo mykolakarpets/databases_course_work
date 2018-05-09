@@ -175,3 +175,41 @@ begin
 
     return result;
 end$$
+
+#--------------------------------------------------------------------------
+
+delimiter ;
+drop function if exists get_org_id;
+
+delimiter $$
+
+create function get_org_id (org_name varchar(20))
+returns int
+begin
+	declare org_id int default -1;
+    
+	select org.id into org_id
+	from organizer as org
+	where org.name = org_name;
+
+    return org_id;
+end$$
+
+#--------------------------------------------------------------------------
+
+delimiter ;
+drop function if exists get_kos_id;
+
+delimiter $$
+
+create function get_kos_id (kos_name varchar(20))
+returns int
+begin
+	declare kos_id int default -1;
+    
+	select kos.id into kos_id
+	from kind_of_sport as kos
+	where kos.name = kos_name;
+
+    return kos_id;
+end$$
