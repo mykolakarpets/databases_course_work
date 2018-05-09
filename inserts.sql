@@ -273,4 +273,37 @@ begin
     end if;
 end$$
 
-call add_sportsman("sportsman_name_100", "sportsman_surname_100",20, 3, "sport_club_1");
+#call add_sportsman("sportsman_name_100", "sportsman_surname_100",20, 3, "sport_club_1");
+
+
+#--------------------------------------------------------------------------
+
+delimiter ;
+drop procedure if exists add_sportsman_coach;
+
+delimiter $$
+create procedure add_sportsman_coach(in s_name varchar(30),
+	in s_surname varchar(30), in c_name varchar(30),
+	in c_surname varchar(30), in kos_name varchar(30))
+begin
+	set @kos_id = get_kos_id(kos_name);
+    set @s_id = get_sportsman_id(s_name, s_surname);
+    set @c_id = get_coach_id(c_name, c_surname);
+    
+	if @kos_id != -1 and
+		@s_id != -1 and
+		@c_id != -1 then
+        set @_ss_id = get_sportsman_sport_id(@s_id, @kos_id);
+        if @_ss_id != -1 and check_coach_sport(@c_id, @kos_id) = 1 and
+			@c_id not in (select _ssc.coach_id from _sportsman_sport_coach as _ssc where _ssc._sportsman_sport_id = @_ss_id) then
+			insert into _sportsman_sport_coach (_sportsman_sport_id, coach_id)
+				values (@_ss_id, @c_id);
+        else
+			select "Something's gone wrong!";
+        end if;
+    else
+		select "One of the parameters is not exist!";
+    end if;
+end$$
+
+#call add_sportsman_coach("sportsman_name_6", "sportsman_surname_6", "coach_name_13", "coach_surname_13", "kind_of_sport_7");

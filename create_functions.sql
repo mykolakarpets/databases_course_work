@@ -4,7 +4,7 @@ drop function if exists get_type_id;
 
 delimiter $$
 
-create function get_type_id (type_name varchar(20))
+create function get_type_id (type_name varchar(30))
 returns int
 begin
 	declare type_id int default -1;
@@ -23,7 +23,7 @@ drop function if exists get_sport_id;
 
 delimiter $$
 
-create function get_sport_id (sport_name varchar(20))
+create function get_sport_id (sport_name varchar(30))
 returns int
 begin
 	declare sport_id int default -1;
@@ -42,7 +42,7 @@ drop function if exists get_coach_id;
 
 delimiter $$
 
-create function get_coach_id (coach_name varchar(20),
+create function get_coach_id (coach_name varchar(30),
 	coach_surname varchar(20))
 returns int
 begin
@@ -82,7 +82,7 @@ drop function if exists get_competition_id;
 
 delimiter $$
 
-create function get_competition_id (c_name varchar(20))
+create function get_competition_id (c_name varchar(30))
 returns int
 begin
 	declare c_id int default -1;
@@ -101,7 +101,7 @@ drop function if exists get_facility_id;
 
 delimiter $$
 
-create function get_facility_id (f_name varchar(20))
+create function get_facility_id (f_name varchar(30))
 returns int
 begin
 	declare f_id int default -1;
@@ -120,7 +120,7 @@ drop function if exists get_attribute_id;
 
 delimiter $$
 
-create function get_attribute_id (attr_name varchar(20))
+create function get_attribute_id (attr_name varchar(30))
 returns int
 begin
 	declare attr_id int default -1;
@@ -183,7 +183,7 @@ drop function if exists get_org_id;
 
 delimiter $$
 
-create function get_org_id (org_name varchar(20))
+create function get_org_id (org_name varchar(30))
 returns int
 begin
 	declare org_id int default -1;
@@ -202,7 +202,7 @@ drop function if exists get_kos_id;
 
 delimiter $$
 
-create function get_kos_id (kos_name varchar(20))
+create function get_kos_id (kos_name varchar(30))
 returns int
 begin
 	declare kos_id int default -1;
@@ -221,7 +221,7 @@ drop function if exists get_sport_club_id;
 
 delimiter $$
 
-create function get_sport_club_id (sc_name varchar(20))
+create function get_sport_club_id (sc_name varchar(30))
 returns int
 begin
 	declare sc_id int default -1;
@@ -231,4 +231,63 @@ begin
 	where sc.name = sc_name;
 
     return sc_id;
+end$$
+
+#--------------------------------------------------------------------------
+
+delimiter ;
+drop function if exists check_sportsman_sport;
+
+delimiter $$
+
+create function check_sportsman_sport (sportsman_id int, kos_id int)
+returns int
+begin
+	declare result int default 0;
+    
+	if kos_id in (select _ss.kind_of_sport_id from _sportsman_sport as _ss
+							where _ss.sportsman_id = sportsman_id) then
+		set result = 1;
+	end if;
+
+    return result;
+end$$
+
+#--------------------------------------------------------------------------
+
+delimiter ;
+drop function if exists check_coach_sport;
+
+delimiter $$
+
+create function check_coach_sport (coach_id int, kos_id int)
+returns int
+begin
+	declare result int default 0;
+    
+	if kos_id in (select _cs.kind_of_sport_id from _coach_sport as _cs
+							where _cs.coach_id = coach_id) then
+		set result = 1;
+	end if;
+
+    return result;
+end$$
+
+#--------------------------------------------------------------------------
+
+delimiter ;
+drop function if exists get_sportsman_sport_id;
+
+delimiter $$
+
+create function get_sportsman_sport_id (s_id int, sport_id int)
+returns int
+begin
+	declare _ss_id int default -1;
+    
+	select _ss.id into _ss_id
+    from _sportsman_sport as _ss
+    where _ss.sportsman_id = s_id and _ss.kind_of_sport_id = sport_id;
+
+    return _ss_id;
 end$$
