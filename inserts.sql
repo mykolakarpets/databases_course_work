@@ -198,3 +198,37 @@ begin
 end$$
 
 #call add_competition("new_competition","oganizer_1","kind_of_sport_1","facility_1","2010-01-01");
+
+#--------------------------------------------------------------------------
+
+delimiter ;
+drop procedure if exists add_kind_of_sport;
+
+delimiter $$
+create procedure add_kind_of_sport(in kos_name varchar(30))
+begin
+	if get_kos_id(kos_name) = -1 then
+		insert into kind_of_sport (name) values (kos_name);
+    else
+		select "Specified kind of sport is already exists!";
+    end if;
+end$$
+
+#call add_kind_of_sport("kind_of_sport_25");
+
+#--------------------------------------------------------------------------
+
+delimiter ;
+drop procedure if exists add_organizer;
+
+delimiter $$
+create procedure add_organizer(in org_name varchar(30))
+begin
+	if get_org_id(org_name) = -1 then
+		insert into organizer (name) values (org_name);
+    else
+		select "Specified organizer is already exists!";
+    end if;
+end$$
+
+#call add_organizer("organizer_1");
