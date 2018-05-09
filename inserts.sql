@@ -5,11 +5,15 @@ drop procedure if exists add_facility_type;
 delimiter $$
 create procedure add_facility_type(IN f_name varchar(30))
 begin
-	if f_name not in (select ft.name from facility_type as ft) then
+	if get_type_id(f_name) = -1 then
 		insert into facility_type (name) values (f_name);
-        select * from facility_type as ft where ft.name = f_name;
+        #select * from facility_type as ft where ft.name = f_name;
+	else
+		select "The facility type is already exist!";
     end if;
 end$$
+
+#call add_facility_type("facility_type_1")$$
 
 #--------------------------------------------------------------------------
 
@@ -21,18 +25,18 @@ create procedure add_attribute_type(in attr_name varchar(30),
 	in attr_value_type varchar(30),
     in facility_type_name varchar(30))
 begin
-	if (facility_type_name in (select ft.name from facility_type as ft)) then
-		if (attr_name) not in (select attr.name from attribute as attr) then
+	if get_type_id(facility_type_name) != -1 then
+		if get_attribute_id(attr_name) = -1 then
 			insert into attribute (name, value_type) values (attr_name, attr_value_type);
-			select * from attribute as attr where attr.name = attr_name;
+			#select * from attribute as attr where attr.name = attr_name;
 		else
 			select "Specified attribute is already present!";
         end if;        
 		
 		if (check_attribute_in_type(get_attribute_id(attr_name), get_type_id(facility_type_name)) = 0) then
 			insert into _attribute_facility_type (attribute_id, facility_type_id) values (get_attribute_id(attr_name), get_type_id(facility_type_name));
-			select * from _attribute_facility_type as _aft where _aft.attribute_id = get_attribute_id(attr_name) 
-				and _aft.facility_type_id = get_type_id(facility_type_name);
+			#select * from _attribute_facility_type as _aft where _aft.attribute_id = get_attribute_id(attr_name) 
+			#	and _aft.facility_type_id = get_type_id(facility_type_name);
 		else
 			select "Specified attribute is already connected to the type!";
         end if;
@@ -41,6 +45,7 @@ begin
 	end if;
 end$$
 
+#call add_attribute_type("int_attribute_1", "int", "facility_type_3")$$
 #--------------------------------------------------------------------------
 
 delimiter ;
@@ -90,5 +95,27 @@ begin
 	end if;
 end$$
 
-#call add_attribute_type("int_attribute_1", "int", "facility_type_2");
-call add_attribute_facility("int_attribute_1", "int", "facility_6", 7, null);
+#call add_attribute_facility("int_attribute_1", "int", "facility_6", 7, null)$$
+
+#--------------------------------------------------------------------------
+
+delimiter ;
+drop procedure if exists add_facility;
+
+delimiter $$
+create procedure add_facility(in facility_name varchar(30),
+	in facility_type_name varchar(30))
+begin
+	if get_facility_id(facility_name) = -1 then
+		if get_type_id(facility_type_name) != -1 then
+			insert into facility (name, facility_type_id) values 
+				(facility_name, get_type_id(facility_type_name));
+		else
+			select "No such facility type!";
+        end if;
+	else
+		select "Specified facility exists!";
+    end if;
+end$$
+
+#call add_facility("facility_111","type_1");
