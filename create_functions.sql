@@ -112,3 +112,41 @@ begin
 
     return f_id;
 end$$
+
+#--------------------------------------------------------------------------
+
+delimiter ;
+drop function if exists get_attribute_id;
+
+delimiter $$
+
+create function get_attribute_id (attr_name varchar(20))
+returns int
+begin
+	declare attr_id int default -1;
+    
+	select attr.id into attr_id
+	from attribute as attr
+	where attr.name = attr_name;
+
+    return attr_id;
+end$$
+
+#--------------------------------------------------------------------------
+
+delimiter ;
+drop function if exists check_attribute_in_type;
+
+delimiter $$
+
+create function check_attribute_in_type(attr_id int, facility_type_id int)
+returns int
+begin
+	declare result int default 0;
+    
+	if ((attr_id, facility_type_id) in (select * from _attribute_facility_type)) then
+		set result = 1;
+	end if;
+
+    return result;
+end$$
