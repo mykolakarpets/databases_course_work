@@ -119,3 +119,36 @@ begin
 end$$
 
 #call add_facility("facility_111","type_1");
+
+#--------------------------------------------------------------------------
+
+delimiter ;
+drop procedure if exists add_attender;
+
+delimiter $$
+create procedure add_attender(in s_name varchar(30),
+	in s_surname varchar(30), in c_name varchar(30), 
+	in is_medalist int, in result int)
+begin
+	set @s_id = get_sportsman_id(s_name, s_surname);
+    set @c_id = get_competition_id(c_name);
+    
+	if  @s_id != -1 and
+		 @c_id != -1 then
+        if (@s_id, @c_id) not in (select att.sportsman_id, att.competition_id from attenders as att) and
+			(@c_id, result) not in (select att.competition_id, att.result from attenders as att) then
+            if (check_sportsman_competition(@s_id, @c_id) = 1) then
+				insert into attenders (competition_id, sportsman_id, is_medalist, result) values
+					(@s_id, @c_id, is_medalist, result);
+			else
+				select "Sportsman's and competition sport are not coincide";
+            end if;
+        else
+			select "Sportsman or the result is already registered in competition";
+        end if;
+    else 
+		select "There is no such sportsman or competition!";
+	end if;
+end$$
+
+#call add_attender("sportsman_name_10","sportsman_surname_10", "competition_10", 1, 1);

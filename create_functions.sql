@@ -150,3 +150,28 @@ begin
 
     return result;
 end$$
+
+#--------------------------------------------------------------------------
+
+delimiter ;
+drop function if exists check_sportsman_competition;
+
+delimiter $$
+
+create function check_sportsman_competition(s_id int, competition_id int)
+returns int
+begin
+	declare result int default 0;
+    
+	if exists (
+		select * from sportsman as s
+        join _sportsman_sport as _ss on s.id = _ss.sportsman_id
+        join attenders as att on att.sportsman_id = s.id
+        join competition as comp on comp.kind_of_sport_id = _ss.kind_of_sport_id
+			where s.id = s_id and comp.id = competition_id
+    ) then
+		set result = 1;
+	end if;
+
+    return result;
+end$$
